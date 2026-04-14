@@ -256,6 +256,120 @@
   }
   .credit b { color: #ffcc00; }
 
+  /* TOUCH CONTROLS */
+  .touch-controls {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 15;
+    display: none;
+  }
+  .touch-controls.active { display: block; }
+  .tap-side {
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    height: 32%;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    gap: 6px;
+    pointer-events: auto;
+  }
+  .tap-side.p1 { left: 0; }
+  .tap-side.p2 { right: 0; }
+  .tap-row {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+  }
+  .tap-btn {
+    flex: 1;
+    border: 3px solid #fff;
+    border-radius: 18px;
+    background: rgba(0,0,0,0.45);
+    color: #fff;
+    font-family: 'Impact', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.1);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform 0.06s, box-shadow 0.06s, filter 0.06s;
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+  }
+  .tap-btn.tapped {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.5), inset 0 0 30px rgba(255,255,255,0.3);
+    filter: brightness(1.3);
+  }
+  .p1 .tap-btn { background: linear-gradient(180deg, rgba(217,65,45,0.7), rgba(140,30,20,0.8)); border-color: #ff9999; }
+  .p2 .tap-btn { background: linear-gradient(180deg, rgba(45,120,217,0.7), rgba(20,60,140,0.8)); border-color: #99ccff; }
+  .tap-super {
+    flex: 0 0 60px;
+    border: 3px solid #ffcc00;
+    background: linear-gradient(180deg, rgba(255,204,0,0.25), rgba(255,100,0,0.3));
+    color: #ffeb3b;
+    font-size: 1.2rem;
+    border-radius: 14px;
+    opacity: 0.5;
+  }
+  .tap-super.ready {
+    opacity: 1;
+    animation: superPulse 0.7s infinite;
+    background: linear-gradient(180deg, #ffcc00, #ff7e00);
+    color: #2a1500;
+  }
+  @keyframes superPulse {
+    0%,100% { filter: brightness(1); box-shadow: 0 6px 0 rgba(0,0,0,0.5); }
+    50% { filter: brightness(1.5); box-shadow: 0 6px 0 rgba(0,0,0,0.5), 0 0 30px #ffcc00; }
+  }
+
+  /* Mobile / responsive adjustments */
+  @media (max-width: 900px) {
+    .panel {
+      padding: 20px 25px;
+      min-width: 0;
+      width: 92vw;
+      max-width: 460px;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    .panel h1 { font-size: 2rem; letter-spacing: 1px; }
+    .panel h2 { font-size: 1.4rem; }
+    .panel p { font-size: 0.85rem; }
+    .btn { font-size: 1rem; padding: 10px 20px; margin: 4px; }
+    .btn.small { font-size: 0.85rem; padding: 7px 14px; }
+    .hud { padding: 0 8px; top: 8px; }
+    .player-hud { padding: 6px 10px; width: 32%; }
+    .player-hud .name { font-size: 0.85rem; }
+    .center-hud { padding: 6px 12px; }
+    .center-hud .round { font-size: 0.7rem; }
+    .center-hud .score { font-size: 1.4rem; letter-spacing: 3px; }
+    .center-hud .timer { font-size: 1rem; }
+    .bar { height: 10px; }
+    .hint { display: none; }
+    .combo { font-size: 1.3rem; top: 22%; }
+    .announce { font-size: 4rem; }
+    .credit { font-size: 0.65rem; bottom: 4px; right: 8px; }
+    .mute-btn { margin-top: 75px; }
+    .tap-btn { font-size: 1.4rem; border-radius: 14px; }
+    .tap-super { flex: 0 0 46px; font-size: 0.95rem; }
+  }
+  @media (max-height: 500px) {
+    .panel { padding: 15px 25px; }
+    .panel h1 { font-size: 1.6rem; margin-bottom: 4px; }
+    .panel p { margin-bottom: 6px; font-size: 0.8rem; }
+    .menu-credit { margin-top: 8px; padding-top: 6px; font-size: 0.75rem; }
+  }
+
   .menu-credit {
     margin-top: 18px;
     font-family: 'Segoe UI', sans-serif;
@@ -324,9 +438,13 @@
         Stamina habis? Istirahat dulu!<br>
         Super meter penuh = aktifkan <b style="color:#ff4d4d;">SUPER PULL</b>!
       </p>
-      <p style="margin-top:10px; font-size:0.8rem;">
+      <p style="margin-top:10px; font-size:0.8rem;" id="ctrlInfo">
         <span style="color:#ff6b6b;">P1:</span> <kbd>A</kbd> <kbd>D</kbd> (super: <kbd>S</kbd>) &nbsp;|&nbsp;
         <span style="color:#66b5ff;">P2:</span> <kbd>J</kbd> <kbd>L</kbd> (super: <kbd>K</kbd>)
+      </p>
+      <p style="margin-top:6px; font-size:0.8rem; display:none;" id="ctrlInfoTouch">
+        📱 <b>Tap tombol di layar</b> bergantian (⬅ ➡) untuk menarik!<br>
+        Tekan <b style="color:#ffcc00;">⚡ SUPER</b> saat menyala untuk serangan kuat.
       </p>
       <div class="menu-credit">
         🎮 Game dibuat oleh <b>Nawyan El Xavier Pratama</b> 🎮
@@ -360,9 +478,32 @@
     <div class="hint hidden" id="hint">
       <div><span class="p1c">PEMAIN 1:</span> <kbd>A</kbd> + <kbd>D</kbd> bergantian — super <kbd>S</kbd></div>
       <div><span class="p2c">PEMAIN 2:</span> <kbd>J</kbd> + <kbd>L</kbd> bergantian — super <kbd>K</kbd></div>
+      <div id="touchHint" style="display:none;">📱 Tap tombol di layar bergantian untuk menarik!</div>
     </div>
 
     <button class="btn small mute-btn hidden" id="muteBtn">🔊 SUARA: ON</button>
+
+    <!-- TOUCH CONTROLS -->
+    <div class="touch-controls" id="touchControls">
+      <div class="tap-side p1">
+        <div class="tap-row">
+          <div class="tap-btn" data-player="1" data-key="a">⬅ TARIK</div>
+          <div class="tap-btn" data-player="1" data-key="d">TARIK ➡</div>
+        </div>
+        <div class="tap-row">
+          <div class="tap-btn tap-super" data-player="1" data-super="1" id="tapSuper1">⚡ SUPER P1</div>
+        </div>
+      </div>
+      <div class="tap-side p2">
+        <div class="tap-row">
+          <div class="tap-btn" data-player="2" data-key="j">⬅ TARIK</div>
+          <div class="tap-btn" data-player="2" data-key="l">TARIK ➡</div>
+        </div>
+        <div class="tap-row">
+          <div class="tap-btn tap-super" data-player="2" data-super="2" id="tapSuper2">⚡ SUPER P2</div>
+        </div>
+      </div>
+    </div>
 
     <div class="credit">Game dibuat oleh <b>Nawyan El Xavier Pratama</b></div>
   </div>
@@ -573,6 +714,65 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
   keysHeld[e.key.toLowerCase()] = false;
 });
+
+// ---------- Touch Input ----------
+const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+const touchControls = $('touchControls');
+
+function showTouchUI() {
+  if (isTouch) {
+    touchControls.classList.add('active');
+    $('touchHint').style.display = 'block';
+    $('ctrlInfo').style.display = 'none';
+    $('ctrlInfoTouch').style.display = 'block';
+  }
+}
+function hideTouchUI() {
+  touchControls.classList.remove('active');
+}
+// If touch device, adjust menu copy immediately
+if (isTouch) {
+  $('ctrlInfo').style.display = 'none';
+  $('ctrlInfoTouch').style.display = 'block';
+}
+
+function handleTap(btn) {
+  ensureAudio();
+  if (!state.running) return;
+  const playerNum = btn.dataset.player;
+  const p = playerNum === '1' ? state.p1 : state.p2;
+  // Prevent AI-controlled P2 from being hijacked
+  if (p.isAI) return;
+  if (btn.dataset.super) {
+    activateSuper(p);
+  } else {
+    onPull(p, btn.dataset.key);
+  }
+  // visual feedback
+  btn.classList.add('tapped');
+  setTimeout(() => btn.classList.remove('tapped'), 100);
+}
+
+document.querySelectorAll('.tap-btn').forEach(btn => {
+  // touchstart gives lowest latency on mobile
+  btn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleTap(btn);
+  }, { passive: false });
+  // also support mouse click (for desktop testing / hybrid devices)
+  btn.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    handleTap(btn);
+  });
+  // prevent context menu on long press
+  btn.addEventListener('contextmenu', (e) => e.preventDefault());
+});
+
+// Prevent whole-page scroll / pinch-zoom during game
+document.addEventListener('touchmove', (e) => {
+  if (state.running) e.preventDefault();
+}, { passive: false });
+document.addEventListener('gesturestart', (e) => e.preventDefault());
 
 // ---------- Core Mechanics ----------
 function onPull(p, key) {
@@ -966,7 +1166,9 @@ function drawCrowd() {
 
 function drawScene() {
   const p1 = state.p1, p2 = state.p2;
-  const centerY = H * 0.62;
+  // On touch devices, shift scene higher so tap controls don't overlap players
+  const touchActive = touchControls && touchControls.classList.contains('active');
+  const centerY = touchActive ? H * 0.48 : H * 0.62;
   const ropeY = centerY;
   const halfLen = 250;
   // pivot points (hands of players)
@@ -1153,8 +1355,12 @@ function updateHUD() {
   $('stam2').style.width = p2.stamina + '%';
   $('super1').style.width = p1.super + '%';
   $('super2').style.width = p2.super + '%';
-  $('super1').parentElement.classList.toggle('super-ready', p1.super >= CFG.SUPER_MAX && p1.superActive <= 0);
-  $('super2').parentElement.classList.toggle('super-ready', p2.super >= CFG.SUPER_MAX && p2.superActive <= 0);
+  const s1ready = p1.super >= CFG.SUPER_MAX && p1.superActive <= 0;
+  const s2ready = p2.super >= CFG.SUPER_MAX && p2.superActive <= 0;
+  $('super1').parentElement.classList.toggle('super-ready', s1ready);
+  $('super2').parentElement.classList.toggle('super-ready', s2ready);
+  $('tapSuper1').classList.toggle('ready', s1ready);
+  $('tapSuper2').classList.toggle('ready', s2ready && !p2.isAI);
   $('score1').textContent = state.score1;
   $('score2').textContent = state.score2;
   $('roundN').textContent = state.round;
@@ -1190,6 +1396,10 @@ function startGame(mode) {
   hud.classList.remove('hidden');
   hint.classList.remove('hidden');
   muteBtn.classList.remove('hidden');
+  showTouchUI();
+  // Hide P2 touch side if AI
+  const p2side = document.querySelector('.tap-side.p2');
+  if (p2side) p2side.style.display = isAI ? 'none' : 'flex';
   startRound();
 }
 
@@ -1249,6 +1459,7 @@ function showGameOver() {
   gameover.classList.remove('hidden');
   hud.classList.add('hidden');
   hint.classList.add('hidden');
+  hideTouchUI();
   const champ = state.score1 > state.score2 ? 1 : 2;
   const isAI = state.p2.isAI;
   $('goTitle').innerHTML = champ === 1 ? '🏆 JUARA! 🏆' : (isAI ? '😔 KALAH!' : '🏆 JUARA! 🏆');
@@ -1279,6 +1490,7 @@ $('menuBtn').addEventListener('click', () => {
   hud.classList.add('hidden');
   hint.classList.add('hidden');
   muteBtn.classList.add('hidden');
+  hideTouchUI();
 });
 
 // init placeholder players so draw() doesn't crash before start
