@@ -235,11 +235,11 @@
 
   .mute-btn {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 90px;
+    top: 18px;
+    left: 18px;
     z-index: 20;
+    padding: 8px 14px !important;
+    font-size: 0.85rem !important;
   }
 
   .credit {
@@ -269,12 +269,15 @@
     position: absolute;
     bottom: 0;
     width: 50%;
-    height: 32%;
+    height: 26%;
     display: flex;
     flex-direction: column;
     padding: 6px;
     gap: 6px;
     pointer-events: auto;
+  }
+  @media (max-width: 900px) {
+    .tap-side { height: 32%; }
   }
   .tap-side.p1 { left: 0; }
   .tap-side.p2 { right: 0; }
@@ -624,7 +627,7 @@ const CFG = {
   BASE_PULL: 2.4,
   COMBO_MULT: 0.45,      // additional per combo step
   ROPE_WIN_OFFSET: 220,  // world units from center to win
-  ROUND_TIME: 60,        // seconds; timeout -> closer side wins
+  ROUND_TIME: 30,        // seconds; timeout -> closer side wins
   ROUNDS_TO_WIN: 2,      // best of 3
 };
 const state = {
@@ -716,25 +719,20 @@ document.addEventListener('keyup', (e) => {
 });
 
 // ---------- Touch Input ----------
-const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+// Always enable touch controls — works for mobile, tablet, iPad, AND desktop (click).
+// This avoids issues where iPad Safari doesn't report as touch device.
 const touchControls = $('touchControls');
 
 function showTouchUI() {
-  if (isTouch) {
-    touchControls.classList.add('active');
-    $('touchHint').style.display = 'block';
-    $('ctrlInfo').style.display = 'none';
-    $('ctrlInfoTouch').style.display = 'block';
-  }
+  touchControls.classList.add('active');
+  $('touchHint').style.display = 'block';
+  $('ctrlInfoTouch').style.display = 'block';
 }
 function hideTouchUI() {
   touchControls.classList.remove('active');
 }
-// If touch device, adjust menu copy immediately
-if (isTouch) {
-  $('ctrlInfo').style.display = 'none';
-  $('ctrlInfoTouch').style.display = 'block';
-}
+// Show touch info in menu immediately
+$('ctrlInfoTouch').style.display = 'block';
 
 function handleTap(btn) {
   ensureAudio();
@@ -1397,7 +1395,7 @@ function startGame(mode) {
   hint.classList.remove('hidden');
   muteBtn.classList.remove('hidden');
   showTouchUI();
-  // Hide P2 touch side if AI
+  // Hide P2 touch side if AI (AI plays itself), keep P1 visible with super button
   const p2side = document.querySelector('.tap-side.p2');
   if (p2side) p2side.style.display = isAI ? 'none' : 'flex';
   startRound();
