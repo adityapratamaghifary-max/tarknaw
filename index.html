@@ -269,7 +269,7 @@
     position: absolute;
     bottom: 0;
     width: 50%;
-    height: 26%;
+    height: 18%;
     display: flex;
     flex-direction: column;
     padding: 6px;
@@ -277,7 +277,7 @@
     pointer-events: auto;
   }
   @media (max-width: 900px) {
-    .tap-side { height: 32%; }
+    .tap-side { height: 22%; }
   }
   .tap-side.p1 { left: 0; }
   .tap-side.p2 { right: 0; }
@@ -316,13 +316,13 @@
   .p1 .tap-btn { background: linear-gradient(180deg, rgba(217,65,45,0.7), rgba(140,30,20,0.8)); border-color: #ff9999; }
   .p2 .tap-btn { background: linear-gradient(180deg, rgba(45,120,217,0.7), rgba(20,60,140,0.8)); border-color: #99ccff; }
   .tap-super {
-    flex: 0 0 60px;
-    border: 3px solid #ffcc00;
-    background: linear-gradient(180deg, rgba(255,204,0,0.25), rgba(255,100,0,0.3));
-    color: #ffeb3b;
-    font-size: 1.2rem;
-    border-radius: 14px;
-    opacity: 0.5;
+    flex: 0.7 !important;
+    border: 3px solid #ffcc00 !important;
+    background: linear-gradient(180deg, rgba(255,204,0,0.4), rgba(255,100,0,0.5)) !important;
+    color: #ffeb3b !important;
+    font-size: 1.4rem;
+    border-radius: 18px;
+    opacity: 0.75;
   }
   .tap-super.ready {
     opacity: 1;
@@ -491,19 +491,15 @@
       <div class="tap-side p1">
         <div class="tap-row">
           <div class="tap-btn" data-player="1" data-key="a">⬅ TARIK</div>
+          <div class="tap-btn tap-super" data-player="1" data-super="1" id="tapSuper1">⚡ SUPER</div>
           <div class="tap-btn" data-player="1" data-key="d">TARIK ➡</div>
-        </div>
-        <div class="tap-row">
-          <div class="tap-btn tap-super" data-player="1" data-super="1" id="tapSuper1">⚡ SUPER P1</div>
         </div>
       </div>
       <div class="tap-side p2">
         <div class="tap-row">
           <div class="tap-btn" data-player="2" data-key="j">⬅ TARIK</div>
+          <div class="tap-btn tap-super" data-player="2" data-super="2" id="tapSuper2">⚡ SUPER</div>
           <div class="tap-btn" data-player="2" data-key="l">TARIK ➡</div>
-        </div>
-        <div class="tap-row">
-          <div class="tap-btn tap-super" data-player="2" data-super="2" id="tapSuper2">⚡ SUPER P2</div>
         </div>
       </div>
     </div>
